@@ -20,7 +20,7 @@ const SearchBooks = () => {
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
 
-  const [saveBook, { error }] = useMutation(SAVE_BOOK);
+  const [saveBook] = useMutation(SAVE_BOOK);
 
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
@@ -64,7 +64,7 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
+console.log("Book to save: ", bookToSave)
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -75,15 +75,15 @@ const SearchBooks = () => {
     try {
       console.log('Attempting gql mutation')
       //convert name to expected variable name
-      const {data} = await saveBook({
-        variables: {bootData: bookToSave}
+      await saveBook({
+        variables: { bookData: bookToSave }
       });
 
-      Auth.login(data.login.token);
+
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.log('Failed gql mutation')///-----------------------REMOVE THIS ERROR
+      console.log('Failed gql mutation')///-----------------------REMOVE THIS ERROR when no error
       console.error(err);
     }
   };
