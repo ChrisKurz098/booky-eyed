@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
+
 import Auth from '../utils/auth';
-import { useMutation } from '@apollo/client';
-
-import { searchGoogleBooks } from '../utils/API';
-
-import { SAVE_BOOK } from '../utils/mutations';
+import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
@@ -19,14 +16,9 @@ const SearchBooks = () => {
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
-
-  const [saveBook, { error }] = useMutation(SAVE_BOOK);
-
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   });
-
-
 
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
@@ -73,17 +65,15 @@ const SearchBooks = () => {
     }
 
     try {
-      console.log('Attempting gql mutation')
-      //convert name to expected variable name
-      const {data} = await saveBook({
-        variables: {bootData: bookToSave}
-      });
+      const response = await saveBook(bookToSave, token);
 
-      Auth.login(data.login.token);
+      if (!response.ok) {
+        throw new Error('something went wrong!');
+      }
+
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.log('Failed gql mutation')///-----------------------REMOVE THIS ERROR
       console.error(err);
     }
   };
