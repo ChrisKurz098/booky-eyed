@@ -38,13 +38,14 @@ const resolvers = {
        
 
         createUser: async (parent, args) => {
+            
             const user = await User.create(args);
 
             if (!user) {
                 throw new AuthenticationError('Something is wrong!');
             }
             const token = signToken(user);
-            return ({ token, user });
+            return { token, user };
         },
 
 
