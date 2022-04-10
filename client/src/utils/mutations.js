@@ -18,6 +18,18 @@ mutation saveBook($bookData: newBook!) {
   }
 `;
 
+export const DELETE_BOOK = gql`
+mutation deleteBook($bookId: String!) {
+    deleteBook( bookId: $bookId) {
+        _id
+        savedBooks {
+            bookId
+            title
+        }
+    }
+  }
+`;
+
 
 export const LOGIN_USER = gql`
 mutation login($username: String, $email: String, $password: String!) {

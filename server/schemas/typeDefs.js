@@ -18,7 +18,6 @@ input newBook {
   image: String
   link: String
   title: String
-
 }
 
 type User {
@@ -35,9 +34,8 @@ type Auth {
 }
 type Query {
   getSingleUser(_id: ID!): User
+  me: User
 }
-
-
 
 
 type Mutation {
@@ -45,6 +43,7 @@ type Mutation {
   createUser(username: String!, email: String!, password: String!): Auth
   saveBook( bookData: newBook!): User
   deleteBook( bookId: String!): User
+ 
 }
 `;
 

@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 
 import { searchGoogleBooks } from '../utils/API';
 
+
 import { SAVE_BOOK } from '../utils/mutations';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
@@ -64,7 +65,6 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-console.log("Book to save: ", bookToSave)
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -73,7 +73,6 @@ console.log("Book to save: ", bookToSave)
     }
 
     try {
-      console.log('Attempting gql mutation')
       //convert name to expected variable name
       await saveBook({
         variables: { bookData: bookToSave }
@@ -83,7 +82,6 @@ console.log("Book to save: ", bookToSave)
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.log('Failed gql mutation')///-----------------------REMOVE THIS ERROR when no error
       console.error(err);
     }
   };
